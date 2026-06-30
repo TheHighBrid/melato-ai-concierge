@@ -1,0 +1,37 @@
+{% comment %}
+  Melato AI Concierge section
+  Add this as sections/melato-ai-concierge-section.liquid, then include it in theme.liquid or a template.
+{% endcomment %}
+
+{% if section.settings.enabled %}
+  <script
+    src="{{ section.settings.script_url | escape }}"
+    defer
+    data-auto="true"
+  ></script>
+{% endif %}
+
+{% schema %}
+{
+  "name": "Melato AI Concierge",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "enabled",
+      "label": "Enable concierge widget",
+      "default": true
+    },
+    {
+      "type": "url",
+      "id": "script_url",
+      "label": "Widget script URL",
+      "default": "https://thehighbrid.github.io/melato-ai-concierge/embed/melato-concierge-widget.js"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Melato AI Concierge"
+    }
+  ]
+}
+{% endschema %}
