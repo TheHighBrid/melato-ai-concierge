@@ -1,0 +1,17 @@
+{
+  "name": "Melato AI Concierge",
+  "short_name": "Melato AI",
+  "description": "Zero-cost Melato customer service agent for chat, email drafting, and browser voice mode.",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#080808",
+  "theme_color": "#080808",
+  "icons": [
+    {
+      "src": "assets/icon.svg",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
