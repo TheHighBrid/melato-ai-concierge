@@ -1,0 +1,60 @@
+AI concierge MVP: website chat first, email-ready inbox workflow second, phone-call path third. I’m going to ground it in your existing Melato knowledge files, then package a GitHub-ready project you can run/export later.
+It is grounded in Melato’s current direction: premium apparel, limited-run production, curated collections, intentional design, stronger trust/support infrastructure, and the need for clearer fit, delivery, returns, product guidance, bundles, and support consistency. � It also uses your current support logic: complimentary delivery on all orders, order prep in 1–3 business days, and consistent delivery wording. �
+Website Audit Request.txt
+Website Audit Request.txt
+Built package
+Download the Melato AI Concierge repo
+What I built
+1. Website chat widget
+A floating “Ask Melato” concierge widget that can be embedded into Shopify.
+It answers:
+Order support
+Delivery
+Returns / exchanges
+Fit guidance
+Care instructions
+Product recommendations
+Full-set / tracksuit bundle guidance
+Drop list / restock questions
+Contact / pop-up info
+Checkout/payment issues
+2. Email response generator
+A dashboard where you paste a customer inquiry and it drafts a polished Melato client-care reply.
+3. Browser voice mode
+Voice input + spoken answers using the browser’s Web Speech API, which supports speech recognition and text-to-speech in web apps. �
+MDN Web Docs
+4. Shopify embed file
+Included:
+shopify/melato-ai-concierge-section.liquid
+5. PWA + Android-ready structure
+Built as a static web app that can be hosted on GitHub Pages. GitHub Pages serves HTML, CSS, and JavaScript directly from a repo. �
+GitHub Docs
+Also included a GitHub Action to build an Android debug APK using Capacitor. Capacitor provides a native Android runtime for JavaScript apps, and supports Android 7+ / API 24+. �
+Capacitor
+6. GitHub workflows
+Included:
+.github/workflows/pages.yml
+.github/workflows/android-debug-apk.yml
+GitHub Actions can run free for public repositories and GitHub Pages. �
+GitHub Docs
+Important honest part
+I could not create the GitHub repo directly because the GitHub connector can write to existing repos, but it does not expose repo creation here, and gh is not installed in this runtime. I checked TheHighBrid/melato-ai-concierge and it does not exist yet. I did not dump this into your unrelated CannabisShopper repo.
+Key files inside
+index.html
+embed/melato-concierge-widget.js
+assets/app.css
+assets/app.js
+shopify/melato-ai-concierge-section.liquid
+manifest.webmanifest
+service-worker.js
+capacitor.config.json
+.github/workflows/pages.yml
+.github/workflows/android-debug-apk.yml
+docs/SHOPIFY_EMBED.md
+docs/ROADMAP.md
+README.md
+Current limitation
+This is the smartest $0 version: website chat, email drafting, and browser voice.
+A real phone-number agent that answers calls to Melato’s phone line needs a telephony provider like Twilio/Telnyx/Vonage or a helpdesk phone integration. That part is not truly $0. The free substitute is the browser voice assistant I built into the app.
+Create an empty GitHub repo named:
+TheHighBrid/melato-ai-concierge
