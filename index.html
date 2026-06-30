@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#080808" />
+  <meta name="description" content="Melato AI Concierge: zero-cost brand-trained customer service agent for website chat, email reply drafting, and browser voice mode." />
+  <link rel="manifest" href="manifest.webmanifest" />
+  <link rel="stylesheet" href="assets/app.css" />
+  <title>Melato AI Concierge</title>
+</head>
+<body>
+  <main class="shell">
+    <section class="hero">
+      <p class="kicker">Melato Client Care OS</p>
+      <h1>Melato AI Concierge</h1>
+      <p class="lead">A zero-cost brand-trained representative for website chat, email inquiries, and browser voice support.</p>
+      <div class="badges">
+        <span>$0 API cost</span>
+        <span>Shopify embeddable</span>
+        <span>PWA / Android-ready</span>
+        <span>No customer tracking</span>
+      </div>
+    </section>
+
+    <section class="grid">
+      <article class="card chat-card">
+        <div class="card-head">
+          <p class="eyebrow">Website chat</p>
+          <h2>Ask the Melato rep</h2>
+        </div>
+        <div id="demo-log" class="demo-log" aria-live="polite"></div>
+        <div class="quick" id="quick-replies"></div>
+        <form id="chat-form" class="prompt-row">
+          <input id="chat-input" placeholder="Ask about delivery, fit, returns, products..." autocomplete="off" />
+          <button type="button" id="voice-button" aria-label="Start voice input">🎙</button>
+          <button type="submit">Ask</button>
+        </form>
+      </article>
+
+      <article class="card">
+        <div class="card-head">
+          <p class="eyebrow">Email replies</p>
+          <h2>Draft client-care response</h2>
+        </div>
+        <label class="field">
+          <span>Customer name</span>
+          <input id="email-name" placeholder="Optional" />
+        </label>
+        <label class="field">
+          <span>Customer inquiry</span>
+          <textarea id="email-inquiry" rows="7" placeholder="Paste the customer email or website inquiry here..."></textarea>
+        </label>
+        <button class="wide" id="draft-email">Generate reply</button>
+        <div class="email-output">
+          <p class="mini-label">Subject</p>
+          <input id="email-subject" readonly />
+          <p class="mini-label">Body</p>
+          <textarea id="email-body" rows="11" readonly></textarea>
+          <button class="wide ghost" id="copy-email">Copy email</button>
+        </div>
+      </article>
+
+      <article class="card">
+        <div class="card-head">
+          <p class="eyebrow">Brand brain</p>
+          <h2>What the agent knows</h2>
+        </div>
+        <ul class="knowledge-list">
+          <li>Melato brand voice: composed, premium, cultural, direct.</li>
+          <li>Delivery: complimentary delivery on all orders.</li>
+          <li>Dispatch: orders usually prepare within 1-3 business days.</li>
+          <li>Support: order-specific issues require order number + checkout email.</li>
+          <li>Products: tracksuits, denim, womenswear, bags, ties, suspenders, accessories.</li>
+          <li>Customer care: fit, returns, care, drop access, payments, pop-up info.</li>
+        </ul>
+      </article>
+
+      <article class="card">
+        <div class="card-head">
+          <p class="eyebrow">Shopify embed</p>
+          <h2>Install snippet</h2>
+        </div>
+        <p class="muted">Host this repo on GitHub Pages, then add this script to Shopify theme.liquid before <code>&lt;/body&gt;</code>.</p>
+        <pre><code>&lt;script src="https://thehighbrid.github.io/melato-ai-concierge/embed/melato-concierge-widget.js" defer&gt;&lt;/script&gt;</code></pre>
+        <p class="muted">For Shopify section-based install, use <code>shopify/melato-ai-concierge-section.liquid</code>.</p>
+      </article>
+    </section>
+  </main>
+
+  <script src="embed/melato-concierge-widget.js" data-auto="false"></script>
+  <script src="assets/app.js"></script>
+</body>
+</html>
