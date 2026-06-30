@@ -1,0 +1,8 @@
+{
+  "appId": "ca.melato.concierge",
+  "appName": "Melato Concierge",
+  "webDir": "dist",
+  "server": {
+    "androidScheme": "https"
+  }
+}
