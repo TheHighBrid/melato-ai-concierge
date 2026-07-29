@@ -47,6 +47,7 @@ docs/ROADMAP.md                             Build roadmap
 ```bash
 npm install
 npm run check
+npm test
 npm run build
 npm start
 ```
