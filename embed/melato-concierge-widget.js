@@ -29,23 +29,30 @@
   };
 
   const INTENTS = [
+    // Resolution-oriented intents come first so "cancel my order" and
+    // "wrong size" do not get classified as routine order or fit questions.
+    { key: 'returns', words: ['return','refund','exchange','wrong size','cancel','damaged','policy'] },
     { key: 'order', words: ['order','tracking','track','where is','shipped','shipment','confirmation','package','delivered','lost'] },
     { key: 'delivery', words: ['delivery','shipping','ship','deliver','free shipping','complimentary','arrival','dispatch'] },
-    { key: 'returns', words: ['return','refund','exchange','wrong size','cancel','damaged','policy'] },
     { key: 'fit', words: ['size','fit','sizing','measure','measurement','small','large','medium','true to size','oversized'] },
     { key: 'care', words: ['wash','care','clean','laundry','dry','iron','maintain'] },
     { key: 'products', words: ['recommend','suggest','product','jacket','pants','tracksuit','denim','bag','accessory','set','complete'] },
-    { key: 'brand', words: ['melato','brand','about','story','special','premium','designer'] }
+    { key: 'brand', words: ['melato','brand','story','special','premium','designer'] }
   ];
 
   function normalize(text) {
     return String(text || '').toLowerCase().replace(/[^a-z0-9@.\s-]/g, ' ').replace(/\s+/g, ' ').trim();
   }
 
+  function containsTerm(text, term) {
+    const escaped = normalize(term).replace(/[.*+?^${}()|[\]\\]/g, '\\$&').replace(/\s+/g, '\\s+');
+    return new RegExp(`(?:^|[^a-z0-9])${escaped}(?=[^a-z0-9]|$)`).test(text);
+  }
+
   function detectIntent(message) {
     const text = normalize(message);
     for (const intent of INTENTS) {
-      if (intent.words.some(word => text.includes(word))) return intent.key;
+      if (intent.words.some(word => containsTerm(text, word))) return intent.key;
     }
     return 'general';
   }
@@ -130,13 +137,13 @@
     const root = document.createElement('div');
     root.id = 'melato-ai-concierge';
     root.innerHTML = `
-      <section class="melato-ai-panel" aria-label="Melato AI Concierge">
+      <section class="melato-ai-panel" aria-label="Melato AI Concierge" aria-hidden="true">
         <div class="melato-ai-head"><div><strong>Melato Concierge</strong><span>Fit, delivery, returns, products, and client care.</span></div><button class="melato-ai-close" aria-label="Close">×</button></div>
         <div class="melato-ai-log" aria-live="polite"></div>
         <div class="melato-ai-quick"></div>
         <form class="melato-ai-form"><input placeholder="Ask Melato..." autocomplete="off" /><button type="button" class="melato-ai-voice" aria-label="Voice input">🎙</button><button type="submit">Ask</button></form>
       </section>
-      <button class="melato-ai-toggle">Ask Melato</button>`;
+      <button class="melato-ai-toggle" aria-expanded="false">Ask Melato</button>`;
     document.body.appendChild(root);
 
     const panel = root.querySelector('.melato-ai-panel');
@@ -184,8 +191,19 @@
       quick.appendChild(chip);
     });
 
-    toggle.addEventListener('click', () => panel.classList.toggle('is-open'));
-    close.addEventListener('click', () => panel.classList.remove('is-open'));
+    function setOpen(open) {
+      panel.classList.toggle('is-open', open);
+      panel.setAttribute('aria-hidden', String(!open));
+      toggle.setAttribute('aria-expanded', String(open));
+      if (open) input.focus();
+      else toggle.focus();
+    }
+
+    toggle.addEventListener('click', () => setOpen(!panel.classList.contains('is-open')));
+    close.addEventListener('click', () => setOpen(false));
+    root.addEventListener('keydown', event => {
+      if (event.key === 'Escape' && panel.classList.contains('is-open')) setOpen(false);
+    });
     form.addEventListener('submit', event => { event.preventDefault(); submit(); });
     voice.addEventListener('click', () => {
       const Recognition = window.SpeechRecognition || window.webkitSpeechRecognition;

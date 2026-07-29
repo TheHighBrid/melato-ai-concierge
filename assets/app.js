@@ -64,8 +64,12 @@
 
   copyButton.addEventListener('click', async () => {
     const text = `Subject: ${emailSubject.value}\n\n${emailBody.value}`;
-    await navigator.clipboard.writeText(text);
-    copyButton.textContent = 'Copied';
+    try {
+      await navigator.clipboard.writeText(text);
+      copyButton.textContent = 'Copied';
+    } catch {
+      copyButton.textContent = 'Copy failed';
+    }
     setTimeout(() => { copyButton.textContent = 'Copy email'; }, 1200);
   });
 
