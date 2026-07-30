@@ -49,8 +49,13 @@ npm install
 npm run check
 npm test
 npm run build
+npm run verify:build
 npm start
 ```
+
+## GitHub Pages deployment
+
+The Pages workflow deploys the contents of `dist/` after running `npm ci`, JavaScript syntax checks, the static build, and artifact verification. The build keeps `.nojekyll` in the deployment artifact and creates `404.html` from `index.html` so GitHub Pages serves the concierge cleanly even on direct fallback routes.
 
 ## Shopify embed
 

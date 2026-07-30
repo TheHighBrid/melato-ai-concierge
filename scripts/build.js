@@ -3,7 +3,7 @@ const path = require('path');
 
 const root = path.resolve(__dirname, '..');
 const dist = path.join(root, 'dist');
-const keep = ['index.html', 'manifest.webmanifest', 'service-worker.js', 'assets', 'embed'];
+const keep = ['index.html', 'manifest.webmanifest', 'service-worker.js', 'assets', 'embed', '.nojekyll'];
 
 fs.rmSync(dist, { recursive: true, force: true });
 fs.mkdirSync(dist, { recursive: true });
@@ -20,4 +20,5 @@ function copy(src, dest) {
 }
 
 for (const entry of keep) copy(path.join(root, entry), path.join(dist, entry));
+fs.copyFileSync(path.join(root, 'index.html'), path.join(dist, '404.html'));
 console.log('Built Melato Concierge static app in dist/.');

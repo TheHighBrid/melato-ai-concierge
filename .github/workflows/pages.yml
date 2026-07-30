@@ -2,7 +2,7 @@ name: Deploy Melato Concierge to GitHub Pages
 
 on:
   push:
-    branches: [main]
+    branches: [main, master]
   workflow_dispatch:
 
 permissions:
@@ -27,12 +27,15 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 22
+          cache: npm
       - name: Install dependencies
-        run: npm install
+        run: npm ci
       - name: Validate JavaScript
         run: npm run check
       - name: Build static app
         run: npm run build
+      - name: Verify Pages artifact
+        run: npm run verify:build
       - name: Setup Pages
         uses: actions/configure-pages@v5
       - name: Upload artifact

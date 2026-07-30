@@ -10,7 +10,8 @@
     "start": "npx serve .",
     "cap:add:android": "npx cap add android",
     "cap:sync": "npx cap sync android",
-    "android:open": "npx cap open android"
+    "android:open": "npx cap open android",
+    "verify:build": "node scripts/verify-build.js"
   },
   "devDependencies": {
     "@capacitor/android": "^8.0.0",
