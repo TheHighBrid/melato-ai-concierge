@@ -41,3 +41,18 @@ test('drafts an intent-specific personalized email', () => {
   assert.match(draft.body, /^Hi Avery,/);
   assert.match(draft.body, /Melato Client Care$/);
 });
+
+test('matches distinctive product names without flooding results with generic garments', () => {
+  const exact = ask('Tell me about the Vision Moto Jacket');
+  assert.match(exact.answer, /Pieces I heard in your question: Vision Moto Jacket\./);
+  assert.doesNotMatch(exact.answer, /Divididos Velour Track Jacket/);
+
+  const generic = ask('Recommend a jacket');
+  assert.doesNotMatch(generic.answer, /Pieces I heard in your question/);
+});
+
+test('sanitizes customer names used in generated email greetings', () => {
+  const draft = draftEmail('Where is my order?', 'Avery\r\nBcc: someone@example.com <script>');
+  assert.match(draft.body, /^Hi Avery Bcc: someone@example\.com script,/);
+  assert.doesNotMatch(draft.body, /[<>\r]/);
+});

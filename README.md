@@ -78,3 +78,11 @@ A real phone-number agent needs a telephony provider such as Twilio, Telnyx, Von
 ## Brand behavior
 
 The concierge should sound composed, premium, direct, helpful, and culturally aware. No fake urgency. No fast-fashion filler. No pretending to access private order data.
+
+## Reliability and privacy
+
+- Customer questions stay in the browser; this version has no analytics or remote AI calls.
+- Order answers explicitly avoid claiming access to Shopify or private customer records.
+- Generated replies must be reviewed by client care before sending.
+- The widget includes keyboard focus management, live-region announcements, and labeled controls.
+- Product mentions use distinctive name matching rather than treating generic words such as “jacket” as a specific item.
