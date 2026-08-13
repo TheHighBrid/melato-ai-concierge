@@ -14,6 +14,7 @@
   const emailBody = document.getElementById('email-body');
   const draftButton = document.getElementById('draft-email');
   const copyButton = document.getElementById('copy-email');
+  const emailStatus = document.getElementById('email-status');
 
   function addMessage(text, role, cta) {
     const bubble = document.createElement('div');
@@ -57,9 +58,15 @@
   });
 
   draftButton.addEventListener('click', () => {
+    if (!emailInquiry.value.trim()) {
+      emailStatus.textContent = 'Add a customer inquiry before generating a reply.';
+      emailInquiry.focus();
+      return;
+    }
     const draft = window.MelatoAI.draftEmail(emailInquiry.value, emailName.value.trim());
     emailSubject.value = draft.subject;
     emailBody.value = draft.body;
+    emailStatus.textContent = 'Reply generated. Review it before sending.';
   });
 
   copyButton.addEventListener('click', async () => {
@@ -67,8 +74,10 @@
     try {
       await navigator.clipboard.writeText(text);
       copyButton.textContent = 'Copied';
+      emailStatus.textContent = 'Email copied to the clipboard.';
     } catch {
       copyButton.textContent = 'Copy failed';
+      emailStatus.textContent = 'Clipboard access is unavailable. Select and copy the reply manually.';
     }
     setTimeout(() => { copyButton.textContent = 'Copy email'; }, 1200);
   });

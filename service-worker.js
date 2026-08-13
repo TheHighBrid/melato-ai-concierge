@@ -1,4 +1,4 @@
-const CACHE = 'melato-ai-concierge-v2';
+const CACHE = 'melato-ai-concierge-v3';
 const ASSETS = [
   './',
   './index.html',

@@ -59,7 +59,17 @@
 
   function productMatch(message) {
     const text = normalize(message);
-    return PRODUCTS.filter(name => normalize(name).split(' ').some(part => part.length > 3 && text.includes(part))).slice(0, 4);
+    const generic = new Set(['velour', 'track', 'jacket', 'pants', 'pant', 'leather', 'wide', 'flare']);
+    const ranked = PRODUCTS.map((name, index) => {
+      const normalizedName = normalize(name);
+      const distinctiveWords = normalizedName.split(' ').filter(part => part.length > 3 && !generic.has(part));
+      const matches = distinctiveWords.filter(part => containsTerm(text, part)).length;
+      return { name, index, score: (text.includes(normalizedName) ? 100 : 0) + matches };
+    }).filter(product => product.score > 0);
+    const exactMatches = ranked.filter(product => product.score >= 100);
+    return (exactMatches.length ? exactMatches : ranked)
+      .sort((a, b) => b.score - a.score || a.index - b.index)
+      .slice(0, 4).map(product => product.name);
   }
 
   function answer(message, options = {}) {
@@ -96,7 +106,8 @@
 
   function draftEmail(inquiry, name = '') {
     const result = answer(inquiry, { channel: 'email' });
-    const customer = name ? `Hi ${name},` : 'Hi,';
+    const safeName = String(name || '').replace(/[\r\n<>]/g, ' ').replace(/\s+/g, ' ').trim().slice(0, 80);
+    const customer = safeName ? `Hi ${safeName},` : 'Hi,';
     const subjectMap = {
       order: 'Melato order support',
       delivery: 'Melato delivery information',
@@ -137,13 +148,13 @@
     const root = document.createElement('div');
     root.id = 'melato-ai-concierge';
     root.innerHTML = `
-      <section class="melato-ai-panel" aria-label="Melato AI Concierge" aria-hidden="true">
+      <section id="melato-ai-dialog" class="melato-ai-panel" role="dialog" aria-label="Melato AI Concierge" aria-modal="false" aria-hidden="true">
         <div class="melato-ai-head"><div><strong>Melato Concierge</strong><span>Fit, delivery, returns, products, and client care.</span></div><button class="melato-ai-close" aria-label="Close">×</button></div>
         <div class="melato-ai-log" aria-live="polite"></div>
         <div class="melato-ai-quick"></div>
         <form class="melato-ai-form"><input placeholder="Ask Melato..." autocomplete="off" /><button type="button" class="melato-ai-voice" aria-label="Voice input">🎙</button><button type="submit">Ask</button></form>
       </section>
-      <button class="melato-ai-toggle" aria-expanded="false">Ask Melato</button>`;
+      <button class="melato-ai-toggle" aria-controls="melato-ai-dialog" aria-expanded="false">Ask Melato</button>`;
     document.body.appendChild(root);
 
     const panel = root.querySelector('.melato-ai-panel');
@@ -203,6 +214,14 @@
     close.addEventListener('click', () => setOpen(false));
     root.addEventListener('keydown', event => {
       if (event.key === 'Escape' && panel.classList.contains('is-open')) setOpen(false);
+      if (event.key === 'Tab' && panel.classList.contains('is-open')) {
+        const focusable = [...panel.querySelectorAll('button:not([disabled]), input:not([disabled]), a[href]')];
+        if (!focusable.length) return;
+        const first = focusable[0];
+        const last = focusable[focusable.length - 1];
+        if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last.focus(); }
+        else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first.focus(); }
+      }
     });
     form.addEventListener('submit', event => { event.preventDefault(); submit(); });
     voice.addEventListener('click', () => {

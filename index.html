@@ -32,6 +32,7 @@
         <div id="demo-log" class="demo-log" aria-live="polite"></div>
         <div class="quick" id="quick-replies"></div>
         <form id="chat-form" class="prompt-row">
+          <label class="sr-only" for="chat-input">Question for the Melato concierge</label>
           <input id="chat-input" placeholder="Ask about delivery, fit, returns, products..." autocomplete="off" />
           <button type="button" id="voice-button" aria-label="Start voice input">🎙</button>
           <button type="submit">Ask</button>
@@ -45,11 +46,11 @@
         </div>
         <label class="field">
           <span>Customer name</span>
-          <input id="email-name" placeholder="Optional" />
+          <input id="email-name" placeholder="Optional" autocomplete="name" />
         </label>
         <label class="field">
           <span>Customer inquiry</span>
-          <textarea id="email-inquiry" rows="7" placeholder="Paste the customer email or website inquiry here..."></textarea>
+          <textarea id="email-inquiry" rows="7" placeholder="Paste the customer email or website inquiry here..." required></textarea>
         </label>
         <button class="wide" id="draft-email">Generate reply</button>
         <div class="email-output">
@@ -58,6 +59,7 @@
           <p class="mini-label">Body</p>
           <textarea id="email-body" rows="11" readonly></textarea>
           <button class="wide ghost" id="copy-email">Copy email</button>
+          <p id="email-status" class="status" role="status" aria-live="polite"></p>
         </div>
       </article>
 
