@@ -33,7 +33,7 @@
         <div class="quick" id="quick-replies"></div>
         <form id="chat-form" class="prompt-row">
           <label class="sr-only" for="chat-input">Question for the Melato concierge</label>
-          <input id="chat-input" placeholder="Ask about delivery, fit, returns, products..." autocomplete="off" />
+          <input id="chat-input" placeholder="Ask about delivery, fit, returns, products..." autocomplete="off" maxlength="2000" />
           <button type="button" id="voice-button" aria-label="Start voice input">🎙</button>
           <button type="submit">Ask</button>
         </form>
@@ -46,11 +46,11 @@
         </div>
         <label class="field">
           <span>Customer name</span>
-          <input id="email-name" placeholder="Optional" autocomplete="name" />
+          <input id="email-name" placeholder="Optional" autocomplete="name" maxlength="80" />
         </label>
         <label class="field">
           <span>Customer inquiry</span>
-          <textarea id="email-inquiry" rows="7" placeholder="Paste the customer email or website inquiry here..." required></textarea>
+          <textarea id="email-inquiry" rows="7" placeholder="Paste the customer email or website inquiry here..." maxlength="10000" required></textarea>
         </label>
         <button class="wide" id="draft-email">Generate reply</button>
         <div class="email-output">
