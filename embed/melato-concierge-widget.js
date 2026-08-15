@@ -31,7 +31,9 @@
   const INTENTS = [
     // Resolution-oriented intents come first so "cancel my order" and
     // "wrong size" do not get classified as routine order or fit questions.
-    { key: 'returns', words: ['return','refund','exchange','wrong size','cancel','damaged','policy'] },
+    // Avoid generic words such as "policy": a request for the delivery policy
+    // must not be mistaken for a return request.
+    { key: 'returns', words: ['return','refund','exchange','wrong size','cancel','damaged'] },
     { key: 'order', words: ['order','tracking','track','where is','shipped','shipment','confirmation','package','delivered','lost'] },
     { key: 'delivery', words: ['delivery','shipping','ship','deliver','free shipping','complimentary','arrival','dispatch'] },
     { key: 'fit', words: ['size','fit','sizing','measure','measurement','small','large','medium','true to size','oversized'] },
@@ -41,7 +43,13 @@
   ];
 
   function normalize(text) {
-    return String(text || '').toLowerCase().replace(/[^a-z0-9@.\s-]/g, ' ').replace(/\s+/g, ' ').trim();
+    return String(text || '')
+      .normalize('NFKD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .toLowerCase()
+      .replace(/[^a-z0-9@.\s-]/g, ' ')
+      .replace(/\s+/g, ' ')
+      .trim();
   }
 
   function containsTerm(text, term) {
@@ -59,10 +67,10 @@
 
   function productMatch(message) {
     const text = normalize(message);
-    const generic = new Set(['velour', 'track', 'jacket', 'pants', 'pant', 'leather', 'wide', 'flare']);
+    const generic = new Set(['velour', 'track', 'jacket', 'pants', 'pant', 'leather', 'wide', 'flare', 'zip']);
     const ranked = PRODUCTS.map((name, index) => {
       const normalizedName = normalize(name);
-      const distinctiveWords = normalizedName.split(' ').filter(part => part.length > 3 && !generic.has(part));
+      const distinctiveWords = normalizedName.split(' ').filter(part => part.length >= 3 && !generic.has(part));
       const matches = distinctiveWords.filter(part => containsTerm(text, part)).length;
       return { name, index, score: (text.includes(normalizedName) ? 100 : 0) + matches };
     }).filter(product => product.score > 0);
@@ -148,11 +156,11 @@
     const root = document.createElement('div');
     root.id = 'melato-ai-concierge';
     root.innerHTML = `
-      <section id="melato-ai-dialog" class="melato-ai-panel" role="dialog" aria-label="Melato AI Concierge" aria-modal="false" aria-hidden="true">
+      <section id="melato-ai-dialog" class="melato-ai-panel" role="dialog" aria-label="Melato AI Concierge" aria-modal="true" aria-hidden="true">
         <div class="melato-ai-head"><div><strong>Melato Concierge</strong><span>Fit, delivery, returns, products, and client care.</span></div><button class="melato-ai-close" aria-label="Close">×</button></div>
         <div class="melato-ai-log" aria-live="polite"></div>
         <div class="melato-ai-quick"></div>
-        <form class="melato-ai-form"><input placeholder="Ask Melato..." autocomplete="off" /><button type="button" class="melato-ai-voice" aria-label="Voice input">🎙</button><button type="submit">Ask</button></form>
+        <form class="melato-ai-form"><input aria-label="Question for the Melato concierge" placeholder="Ask Melato..." autocomplete="off" maxlength="2000" /><button type="button" class="melato-ai-voice" aria-label="Voice input">🎙</button><button type="submit">Ask</button></form>
       </section>
       <button class="melato-ai-toggle" aria-controls="melato-ai-dialog" aria-expanded="false">Ask Melato</button>`;
     document.body.appendChild(root);

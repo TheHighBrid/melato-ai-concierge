@@ -29,6 +29,11 @@ test('matches whole terms instead of unrelated substrings', () => {
   assert.equal(ask('Is this a small-batch designer brand?').intent, 'fit');
 });
 
+test('does not confuse delivery policy with return policy', () => {
+  assert.equal(ask('What is your delivery policy?').intent, 'delivery');
+  assert.equal(ask('What is your return policy?').intent, 'returns');
+});
+
 test('returns safe, actionable order guidance', () => {
   const result = ask('Track my package');
   assert.match(result.answer, /cannot access live Shopify order data/i);
@@ -49,6 +54,10 @@ test('matches distinctive product names without flooding results with generic ga
 
   const generic = ask('Recommend a jacket');
   assert.doesNotMatch(generic.answer, /Pieces I heard in your question/);
+});
+
+test('matches product names regardless of diacritics', () => {
+  assert.match(ask('Tell me about the CHU velour set').answer, /CHŪ Velour Track Jacket/);
 });
 
 test('sanitizes customer names used in generated email greetings', () => {

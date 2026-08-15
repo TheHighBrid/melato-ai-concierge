@@ -70,6 +70,11 @@
   });
 
   copyButton.addEventListener('click', async () => {
+    if (!emailSubject.value.trim() && !emailBody.value.trim()) {
+      emailStatus.textContent = 'Generate a reply before copying it.';
+      emailInquiry.focus();
+      return;
+    }
     const text = `Subject: ${emailSubject.value}\n\n${emailBody.value}`;
     try {
       await navigator.clipboard.writeText(text);
@@ -92,12 +97,20 @@
     recognition.lang = 'en-CA';
     recognition.interimResults = false;
     recognition.maxAlternatives = 1;
+    recognition.onstart = () => {
+      voiceButton.disabled = true;
+      voiceButton.setAttribute('aria-label', 'Listening for voice input');
+    };
     recognition.onresult = event => {
       const transcript = event.results[0][0].transcript;
       const result = submit(transcript);
       if (result) window.MelatoAI.speak(result.answer);
     };
     recognition.onerror = () => addMessage('I could not catch that clearly. Try again or type it in.', 'bot');
+    recognition.onend = () => {
+      voiceButton.disabled = false;
+      voiceButton.setAttribute('aria-label', 'Start voice input');
+    };
     recognition.start();
   });
 
